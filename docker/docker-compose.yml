@@ -1,0 +1,56 @@
+version: '2.2'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+    networks:
+      elastic-network:
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.3.1
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    networks:
+      elastic-network:
+
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:7.3.1
+    volumes:
+      - ./apm-server/apm-server.yml:/usr/share/apm-server/apm-server.yml
+    ports:
+      - "8200:8200"
+    user: apm-server
+    command: --strict.perms=false -e
+    environment:
+      - output.elasticsearch.hosts=["elasticsearch:9200"]
+    networks:
+      elastic-network:
+
+  elastic-agent:
+    image: docker.elastic.co/beats/elastic-agent:7.3.1
+    ports:
+      - "8220:8220"
+      - "6791:6791"
+    user: root # note, synthetic browser monitors require this set to `elastic-agent`
+    environment:
+      - FLEET_SERVER_ENABLE=true
+      - FLEET_SERVER_ELASTICSEARCH_HOST=http://elasticsearch:9200
+      - FLEET_SERVER_SERVICE_TOKEN=AAEAAWVsYXN0aWMvZmxlZXQtc2VydmVyL3Rva2VuLTE2NDE3Nzc2NjY3MjU6RTI2em9VOGFTTnU0dUxLRVB6ZWNUdw
+      - FLEET_SERVER_POLICY=499b5aa7-d214-5b5d-838b-3cd76469844e
+      - FLEET_SERVER_INSECURE-HTTP
+      - FLEET_ENROLLMENT_TOKEN=QUtlUlFYNEJnYjFoQWV6WFV6N0U6MG85cmE5RnZSbWVoY3BGaDlDU3RNUQ==
+      - FLEET_ENROLL=1
+      - FLEET_URL=http://elastic-agent:8220
+    networks:
+      elastic-network:
+
+networks:
+  elastic-network:
