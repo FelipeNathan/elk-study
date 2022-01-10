@@ -34,23 +34,5 @@ services:
     networks:
       elastic-network:
 
-  elastic-agent:
-    image: docker.elastic.co/beats/elastic-agent:7.3.1
-    ports:
-      - "8220:8220"
-      - "6791:6791"
-    user: root # note, synthetic browser monitors require this set to `elastic-agent`
-    environment:
-      - FLEET_SERVER_ENABLE=true
-      - FLEET_SERVER_ELASTICSEARCH_HOST=http://elasticsearch:9200
-      - FLEET_SERVER_SERVICE_TOKEN=AAEAAWVsYXN0aWMvZmxlZXQtc2VydmVyL3Rva2VuLTE2NDE3Nzc2NjY3MjU6RTI2em9VOGFTTnU0dUxLRVB6ZWNUdw
-      - FLEET_SERVER_POLICY=499b5aa7-d214-5b5d-838b-3cd76469844e
-      - FLEET_SERVER_INSECURE-HTTP
-      - FLEET_ENROLLMENT_TOKEN=QUtlUlFYNEJnYjFoQWV6WFV6N0U6MG85cmE5RnZSbWVoY3BGaDlDU3RNUQ==
-      - FLEET_ENROLL=1
-      - FLEET_URL=http://elastic-agent:8220
-    networks:
-      elastic-network:
-
 networks:
   elastic-network:
