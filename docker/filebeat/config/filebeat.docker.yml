@@ -1,0 +1,38 @@
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true
+#      templates:
+#        - condition:
+#            or:
+#              - contains:
+#                  docker.container.image: docker.elastic.co/apm/apm-server
+#              - contains:
+#                  docker.container.image: docker.elastic.co/beats/filebeat
+#              - contains:
+#                  docker.container.image: docker.elastic.co/elasticsearch/elasticsearch
+#              - contains:
+#                  docker.container.image: docker.elastic.co/kibana/kibana
+#        config:
+#          - type: container
+
+
+#filebeat.inputs:
+#  - type: docker
+#    containers:
+#      stream: 'stdout'
+#      ids:
+#        - '*'
+
+processors:
+- add_cloud_metadata: ~
+
+output.elasticsearch:
+  hosts: '${ELASTICSEARCH_HOSTS:elasticsearch:9200}'
+  username: '${ELASTICSEARCH_USERNAME:}'
+  password: '${ELASTICSEARCH_PASSWORD:}'
