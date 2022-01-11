@@ -7,30 +7,23 @@ filebeat.autodiscover:
   providers:
     - type: docker
       hints.enabled: true
-#      templates:
-#        - condition:
-#            or:
-#              - contains:
-#                  docker.container.image: docker.elastic.co/apm/apm-server
-#              - contains:
-#                  docker.container.image: docker.elastic.co/beats/filebeat
-#              - contains:
-#                  docker.container.image: docker.elastic.co/elasticsearch/elasticsearch
-#              - contains:
-#                  docker.container.image: docker.elastic.co/kibana/kibana
-#        config:
-#          - type: container
 
-
-#filebeat.inputs:
-#  - type: docker
-#    containers:
-#      stream: 'stdout'
-#      ids:
-#        - '*'
+filebeat.inputs:
+  - type: docker
+    combine_partial: true
+    containers:
+      path: "/var/lib/docker/containers"
+      stream: "stdout"
+      ids:
+        - "*"
 
 processors:
-- add_cloud_metadata: ~
+  - add_cloud_metadata: ~
+  - add_docker_metadata:
+      match_short_id: true
+  - drop_event:
+      when.regexp:
+        container.image.name: docker.elastic.co/.*
 
 output.elasticsearch:
   hosts: '${ELASTICSEARCH_HOSTS:elasticsearch:9200}'
