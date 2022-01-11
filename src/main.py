@@ -1,4 +1,5 @@
 import os
+import logging
 from logging.config import dictConfig
 
 from elasticapm.contrib.flask import ElasticAPM
@@ -21,6 +22,8 @@ dictConfig({
 })
 
 app = Flask(__name__)
+logging.getLogger('werkzeug').setLevel(logging.ERROR)
+
 app.config['ELASTIC_APM'] = {
     'SERVICE_NAME': 'elk-study',
     'SECRET_TOKEN': '',
