@@ -1,37 +1,4 @@
-import os
-import logging
-from logging.config import dictConfig
-
-from elasticapm.contrib.flask import ElasticAPM
-from flask import Flask
-
-dictConfig({
-    'version': 1,
-    'formatters': {'default': {
-        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
-    }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'stream': 'ext://sys.stdout',
-        'formatter': 'default'
-    }},
-    'root': {
-        'level': 'INFO',
-        'handlers': ['wsgi']
-    }
-})
-
-app = Flask(__name__)
-logging.getLogger('werkzeug').setLevel(logging.ERROR)
-
-app.config['ELASTIC_APM'] = {
-    'SERVICE_NAME': 'elk-study',
-    'SECRET_TOKEN': '',
-    'SERVER_URL': os.environ.get("APM_SERVER_PATH", "http://localhost:8200"),
-    'ENVIRONMENT': os.environ.get("ENVIRONMENT", "development"),
-}
-
-apm = ElasticAPM(app)
+from config.app_config import app, apm
 
 
 @app.route("/home")
@@ -44,14 +11,16 @@ def home():
 def home_me():
     return "<p>Hello Felipe</p>"
 
+
 @app.route("/error/capture/exception")
 def handle_exception():
     try:
-        1/0
+        1 / 0
     except ZeroDivisionError:
         apm.capture_exception()
 
     return "<p>error captured</p>"
+
 
 @app.route("/error/capture/message")
 def handle_message():
@@ -59,12 +28,13 @@ def handle_message():
 
     return "<p>error captured</p>"
 
+
 @app.route("/error/capture/extra")
 def handle_extra():
     try:
-        1/0
+        1 / 0
     except ZeroDivisionError:
-        app.logger.error("Math division", exc_info=True, extra={ 'good_at_math': False })
+        app.logger.error("Math division", exc_info=True, extra={'tags': {'good_at_math': False}})
 
     return "<p>error captured</p>"
 
