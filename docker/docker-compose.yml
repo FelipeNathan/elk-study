@@ -17,7 +17,6 @@ services:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - "9200:9200"
-      - "9300:9300"
     environment:
       - discovery.type=single-node
     networks:
@@ -57,6 +56,13 @@ services:
       - ./filebeat/config/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      elastic-network:
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.3.1
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
     networks:
       elastic-network:
 

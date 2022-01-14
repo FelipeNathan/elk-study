@@ -34,7 +34,8 @@ def handle_extra():
     try:
         1 / 0
     except ZeroDivisionError:
-        app.logger.error("Math division", exc_info=True, extra={'tags': {'good_at_math': False}})
+        extra = {"tags": {"good_at_math": "false"}}
+        app.logger.error("Math division", exc_info=True, extra=extra)
 
     return "<p>error captured</p>"
 

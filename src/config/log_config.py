@@ -6,7 +6,7 @@ def load_dict_config():
     dictConfig({
         'version': 1,
         'formatters': {'default': {
-            'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s %(tags)s',
+            'format': '[%(asctime)s] [%(levelname)s] %(tags)s: %(message)s',
         }},
         'handlers': {'wsgi': {
             'class': 'logging.StreamHandler',
