@@ -1,22 +1,25 @@
 import logging
-from logging.config import dictConfig
+import sys
 
 
 def load_dict_config():
-    dictConfig({
-        'version': 1,
-        'formatters': {'default': {
-            'format': '[%(asctime)s] [%(levelname)s] : %(message)s'
-        }},
-        'handlers': {'wsgi': {
-            'class': 'logging.StreamHandler',
-            'stream': 'ext://sys.stdout',
-            'formatter': 'default'
-        }},
-        'root': {
-            'level': 'INFO',
-            'handlers': ['wsgi']
-        }
-    })
+    formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] [%(extra)s]: %(message)s')
+
+    stream = logging.StreamHandler(stream=sys.stdout)
+    stream.setLevel(logging.INFO)
+    stream.setFormatter(formatter)
+    stream.addFilter(ExtraLogFilter())
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(stream)
+    logger.addFilter(ExtraLogFilter())
 
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
+
+
+class ExtraLogFilter(logging.Filter):
+    def filter(self, record):
+        if not hasattr(record, 'extra'):
+            record.extra = {}
+        return True
