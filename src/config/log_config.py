@@ -1,12 +1,12 @@
-from logging.config import dictConfig
 import logging
+from logging.config import dictConfig
 
 
 def load_dict_config():
     dictConfig({
         'version': 1,
         'formatters': {'default': {
-            'format': '[%(asctime)s] [%(levelname)s] %(tags)s: %(message)s',
+            'format': '[%(asctime)s] [%(levelname)s] : %(message)s'
         }},
         'handlers': {'wsgi': {
             'class': 'logging.StreamHandler',
