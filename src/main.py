@@ -40,5 +40,13 @@ def handle_extra():
     return "<p>error captured</p>"
 
 
+@app.route("/error/capture/should/<throw>")
+def not_capture_error(throw="true"):
+    if throw == "true":
+        1 / 0
+    else:
+        return "<p>not throwing exception</p>"
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
