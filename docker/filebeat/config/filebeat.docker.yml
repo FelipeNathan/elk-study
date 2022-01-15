@@ -11,6 +11,11 @@ filebeat.inputs:
       stream: "stdout"
       ids:
         - "*"
+    multiline:
+      type: pattern
+      pattern: '^\['
+      negate: true
+      match: after
 
 processors:
   - add_cloud_metadata: ~
