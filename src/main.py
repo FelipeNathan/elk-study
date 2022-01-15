@@ -35,9 +35,9 @@ def handle_message():
 def handle_extra():
     try:
         1 / 0
-    except ZeroDivisionError:
-        extra = {"extra": {"good_at_math": "false"}}
-        app.logger.error("Math division", extra=extra)
+    except ZeroDivisionError as e:
+        extra = {"extra": {"exception": e.__str__()}}
+        app.logger.error("Math division", extra=extra, exc_info=True)
 
     return "<p>error captured</p>"
 
