@@ -1,3 +1,5 @@
+import elasticapm
+
 from config.app_config import app, apm
 
 
@@ -46,6 +48,13 @@ def not_capture_error(throw="true"):
         1 / 0
     else:
         return "<p>not throwing exception</p>"
+
+
+@app.route("/events")
+@app.route("/events/<event_name>")
+def events(event_name="no.event.name"):
+    elasticapm.set_transaction_name(event_name)
+    return f"<p>{event_name}</p>"
 
 
 if __name__ == '__main__':
