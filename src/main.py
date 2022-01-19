@@ -57,5 +57,16 @@ def events(event_name="no.event.name"):
     return f"<p>{event_name}</p>"
 
 
+@app.route("/error/capture/extra2")
+def handle_extra_2():
+    try:
+        raise Exception("whatever")
+    except Exception as e:
+        extra = {"extra": {"exception": e.__str__()}}
+        app.logger.error("Whatever exception", extra=extra, exc_info=True)
+
+    return "<p>error captured</p>"
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
