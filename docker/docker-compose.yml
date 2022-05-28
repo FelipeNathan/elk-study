@@ -1,13 +1,54 @@
 version: '2.2'
 services:
-  app:
+  app_1:
     build:
       context: ../
       dockerfile: ./Dockerfile
+    container_name: ms-python
     environment:
       - APM_SERVER_PATH=http://apm-server:8200
     ports:
       - "3000:3000"
+    networks:
+      elastic-network:
+
+  app_2:
+    build:
+      context: ../
+      dockerfile: ./Dockerfile
+    container_name: pp-ms-go
+    environment:
+      - APM_SERVER_PATH=http://apm-server:8200
+    ports:
+      - "3001:3000"
+    labels:
+      - "app.language=kotlin"
+    networks:
+      elastic-network:
+
+  app_3:
+    build:
+      context: ../
+      dockerfile: ./Dockerfile
+    container_name: pp-ms-kotlin
+    environment:
+      - APM_SERVER_PATH=http://apm-server:8200
+    ports:
+      - "3002:3000"
+    labels:
+      - "app.language=kotlin"
+    networks:
+      elastic-network:
+
+  app_4:
+    build:
+      context: ../
+      dockerfile: ./Dockerfile
+    container_name: ms-java
+    environment:
+      - APM_SERVER_PATH=http://apm-server:8200
+    ports:
+      - "3003:3000"
     networks:
       elastic-network:
 
