@@ -16,7 +16,7 @@ services:
     build:
       context: ../
       dockerfile: ./Dockerfile
-    container_name: pp-ms-go
+    container_name: ms-go
     environment:
       - APM_SERVER_PATH=http://apm-server:8200
     ports:
@@ -30,7 +30,7 @@ services:
     build:
       context: ../
       dockerfile: ./Dockerfile
-    container_name: pp-ms-kotlin
+    container_name: ms-kotlin
     environment:
       - APM_SERVER_PATH=http://apm-server:8200
     ports:

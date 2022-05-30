@@ -16,6 +16,7 @@ filebeat.inputs:
       pattern: '^\['
       negate: true
       match: after
+    processors:
 
 processors:
   - add_cloud_metadata: ~
@@ -24,6 +25,12 @@ processors:
   - drop_event:
       when.regexp:
         container.image.name: docker.elastic.co/.*
+  - copy_fields:
+      fields:
+        - from: container.labels.app_language
+          to: '@language'
+      fail_on_error: false
+      ignore_missing: true
 
 output.logstash:
   hosts: '${LOGSTASH_HOSTS:logstash:5044}'
